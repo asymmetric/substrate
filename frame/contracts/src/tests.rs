@@ -93,7 +93,7 @@ pub mod test_utils {
 	pub fn place_contract(address: &AccountIdOf<Test>, code_hash: CodeHash<Test>) {
 		let trie_id = Storage::<Test>::generate_trie_id(address);
 		set_balance(address, ConfigCache::<Test>::subsistence_threshold_uncached() * 10);
-		Storage::<Test>::place_contract(&address, trie_id, code_hash).unwrap()
+		Storage::<Test>::place_contract(&address, trie_id, code_hash).unwrap();
 	}
 	pub fn set_balance(who: &AccountIdOf<Test>, amount: u64) {
 		let imbalance = Balances::deposit_creating(who, amount);

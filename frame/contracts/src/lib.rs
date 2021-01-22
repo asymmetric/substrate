@@ -432,6 +432,8 @@ decl_error! {
 		/// This can either happen when the accumulated storage in bytes is too large or
 		/// when number of storage items is too large.
 		StorageExhausted,
+		/// A contract with the same AccountId already exists.
+		DuplicateContract,
 	}
 }
 

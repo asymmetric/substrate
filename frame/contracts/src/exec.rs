@@ -269,16 +269,17 @@ where
 			Err(Error::<T>::MaxCallDepthReached)?
 		}
 
+		let contract = <ContractInfoOf<T>>::get(&dest)
+			.and_then(|contract| contract.get_alive())
+			.ok_or(Error::<T>::NotCallable)?;
+
 		// This charges the rent and denies access to a contract that is in need of
 		// eviction by returning `None`. We cannot evict eagerly here because those
 		// changes would be rolled back in case this contract is called by another
 		// contract.
 		// See: https://github.com/paritytech/substrate/issues/6439#issuecomment-648754324
-		let contract = if let Ok(Some(ContractInfo::Alive(info))) = Rent::<T>::charge(&dest) {
-			info
-		} else {
-			Err(Error::<T>::NotCallable)?
-		};
+		let contract = Rent::<T>::charge(&dest, contract)?
+			.ok_or(Error::<T>::NotCallable)?;
 
 		let transactor_kind = self.transactor_kind();
 		let caller = self.self_account.clone();
@@ -360,9 +361,12 @@ where
 				// This also makes sure that it is above the subsistence threshold
 				// in order to keep up the guarantuee that we always leave a tombstone behind
 				// with the exception of a contract that called `seal_terminate`.
-				Rent::<T>::charge(&dest)?
-					.and_then(|c| c.get_alive())
-					.ok_or_else(|| Error::<T>::NewContractNotFunded)?;
+				<ContractInfoOf<T>>::get(&dest)
+					.and_then(|contract| contract.get_alive())
+					.map(|contract| Rent::<T>::charge(&dest, contract))
+					.transpose()?
+					.flatten()
+					.ok_or(Error::<T>::NewContractNotFunded)?;
 
 				// Deposit an instantiation event.
 				deposit_event::<T>(vec![], RawEvent::Instantiated(caller.clone(), dest.clone()));
