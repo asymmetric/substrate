@@ -13,8 +13,8 @@
       with import nixpkgs { system = "x86_64-linux"; overlays = [ rust-overlay.overlay ]; };
 
       (makeRustPlatform {
-        rustc = rust-bin.nightly.latest.rust;
-        cargo = rust-bin.nightly.latest.cargo;
+        rustc = rust-bin.nightly."2021-01-23".rust;
+        cargo = rust-bin.nightly."2021-01-23".cargo;
       }).buildRustPackage {
         pname = "subkey";
         version = "2.0.0";
