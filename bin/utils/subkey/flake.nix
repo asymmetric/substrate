@@ -21,7 +21,7 @@
 
         src = self;
 
-        cargoSha256 = "sha256-+t2B3Kg9htMbrhjd4dNEE0RbC4GoWujTbUp2bPZjFrw=";
+        cargoSha256 = "sha256-bYwtyK76m6oodZaHN5nG27rrsvXN0Ssk4G8MTubVxVo=";
         LIBCLANG_PATH = "${llvmPackages.libclang}/lib";
         PROTOC = "${protobuf}/bin/protoc";
         BUILD_DUMMY_WASM_BINARY = 1;
