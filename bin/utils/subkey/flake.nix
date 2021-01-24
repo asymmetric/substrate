@@ -28,6 +28,8 @@
 
         nativeBuildInputs = [ clang pkg-config ];
         buildInputs = [ openssl ];
+
+        doCheck = false;
       };
   };
 }
